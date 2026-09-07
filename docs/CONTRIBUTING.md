@@ -46,6 +46,9 @@ Always work on a separate branch rather than main:
 2. Click the Compare & pull request button that appears near the top.
 3. Write a brief description and submit your PR!
 
+### Step 6: FeedBack
+Please star the repo if you liked this turorial and if you feel there is anything that is a good quality of life feature or something you would like to see, Please submit an issue.
+
 ---
 
 ## 📜 Contribution Rules
