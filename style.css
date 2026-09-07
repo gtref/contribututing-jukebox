@@ -1,0 +1,80 @@
+:root {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --accent: #38bdf8;
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  margin: 0;
+  padding: 2rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  color: var(--text-sub);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.track-card {
+  background: var(--card-bg);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.track-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #fff;
+}
+
+.track-card p {
+  margin: 0.25rem 0;
+  color: var(--text-sub);
+  font-size: 0.9rem;
+}
+
+.track-card a {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.track-card a:hover {
+  text-decoration: underline;
+}
+
+.user-tag {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  border-top: 1px solid #334155;
+  padding-top: 0.5rem;
+}
