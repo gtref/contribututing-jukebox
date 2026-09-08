@@ -12,7 +12,7 @@ Follow the step-by-step guide below to add your favorite coding track to the pla
 1. Click the **Fork** button at the top right of this repository to create your own copy.
 2. Open your terminal and clone your fork to your computer:
    git clone https://github.com/your-user-name/contribututing-jukebox.git  (Replace `your-user-name` with your github username)
-   cd dev-jukebox
+   cd contribututing-jukebox
 
 ### Step 2: Create a New Branch
 Always work on a separate branch rather than main:
@@ -46,8 +46,8 @@ Always work on a separate branch rather than main:
 2. Click the Compare & pull request button that appears near the top.
 3. Write a brief description and submit your PR!
 
-### Step 6: FeedBack
-Please star the repo if you liked this turorial and if you feel there is anything that is a good quality of life feature or something you would like to see, Please submit an issue.
+### Step 6: Feedback
+Please star the repo if you liked this tutorial and if you feel there is anything that is a good quality of life feature or something you would like to see, Please submit an issue.
 
 ---
 

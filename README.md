@@ -1,6 +1,6 @@
 [![first-timers-only](https://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](https://www.firsttimersonly.com/)
 
-# contribututing-jukebox
+# contributing-jukebox
 A online music repository powered by contribution
 
 # Contribution
