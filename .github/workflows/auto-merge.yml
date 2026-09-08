@@ -18,23 +18,26 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: Approve PR
-        uses: andrewmusgrave/automatic-pull-request-review@v1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          event: APPROVE
-          body: 'Automated review: Changes look good!'
-
-      - name: Send "Well Done" Comment
+      - name: Approve PR and Send "Well Done" Comment
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
+            // 1. Submit approval review
+            await github.rest.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Well done @${{ github.event.pull_request.user.login }}! Your PR has been reviewed and approved.'
-            })
+              pull_number: context.issue.number,
+              event: 'APPROVE',
+              body: 'Automated review: Changes look good!'
+            });
+
+            // 2. Post comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Well done @${context.payload.pull_request.user.login}! Your PR has been reviewed and approved.`
+            });
 
       - name: Merge PR
         uses: pascalgn/automerge-action@v0.16.0
@@ -59,34 +62,37 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
 
-            // Fetch files in the PR
+            const manifestPath = path.join('tracks', 'manifest.json');
+
+            // Fetch files changed in the PR
             const { data: files } = await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
             });
 
-            // Find JSON files added or modified, excluding manifest.json itself
-            const jsonFiles = files.filter(f => f.filename.endsWith('.json') && f.filename !== 'tracks/manifest.json' && f.status !== 'removed');
+            // Exclude manifest.json itself and non-JSON/removed files
+            const jsonFiles = files.filter(f => f.filename.endsWith('.json') && f.filename !== manifestPath && f.status !== 'removed');
 
             if (jsonFiles.length === 0) {
-              console.log('No new JSON files to add to manifest.json');
+              console.log('No new JSON files to add to tracks/manifest.json');
               return;
             }
 
-            // Read existing manifest or initialize array
+            // Read existing manifest or create new array
             let manifest = [];
-            if (fs.existsSync('tracks/manifest.json')) {
+            if (fs.existsSync(manifestPath)) {
               try {
-                manifest = JSON.parse(fs.readFileSync('tracks/manifest.json', 'utf8'));
+                manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
                 if (!Array.isArray(manifest)) manifest = [manifest];
               } catch (e) {
                 manifest = [];
               }
             }
 
-            // Append paths or contents of new JSON files
+            // Append entries
             for (const file of jsonFiles) {
               manifest.push({
                 file: file.filename,
@@ -95,11 +101,13 @@ jobs:
               });
             }
 
-            fs.writeFileSync('tracks/manifest.json', JSON.stringify(manifest, null, 2));
+            // Ensure directory exists and write file
+            fs.mkdirSync('tracks', { recursive: true });
+            fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
       - name: Commit and Push Manifest Update
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add manifest.json
-          git diff --staged --quiet || (git commit -m "chore: update manifest.json from PR #${{ github.event.pull_request.number }}" && git push)
+          git add tracks/manifest.json
+          git diff --staged --quiet || (git commit -m "chore: update tracks/manifest.json from PR #${{ github.event.pull_request.number }}" && git push)
